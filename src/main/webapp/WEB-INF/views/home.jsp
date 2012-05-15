@@ -31,48 +31,27 @@
 	            </header>
 	        	<div class="row-fluid">
 	        		<div class="span2">
-		            	<header class="page-header">
-	                        <h4>Stats</h4>
+		                <ul class="nav nav-list">
+						  <li class="nav-header">
+						    Select Transport
+						  </li>
+					      <li id="websockets-item">
+					      	<a href="#">Websockets</a>
+					      </li>
+					      <li id="streaming-item" class="active">
+					      	<a href="#">Streaming</a>
+					      </li>
+					      <li id="polling-item">
+					      	<a href="#">Polling</a>
+					      </li>
+					      <li id="long-polling-item">
+					      	<a href="#">Long Polling</a>
+					      </li>
+				        </ul>
+				        <br />
+				        <header class="nav-header">
+	                        <h3>Stats</h3>
 	                    </header>
-		                <table id="asynchHttpStats" class="table-condensed">
-		                    <thead>
-		                        <tr>
-		                            <th></th>
-		                            <th></th>
-		                        </tr>
-		                    </thead>
-		                    <tbody>
-		                        <tr>
-		                            <td>Protocol</td>
-		                            <td id="transportType">N/A</td>
-		                        </tr>
-		                        <tr>
-		                        	<td>
-		                        		<li class="dropdown">
-										    <a class="dropdown-toggle"
-										       data-toggle="dropdown" href="#">
-										        Choose Protocol
-										        <b class="caret"></b>
-										      </a>
-										    <ul class="dropdown-menu">
-										      <li>
-										      	<a id="websockets-item" href="#">Websockets</a>
-										      </li>
-										      <li>
-										      	<a id="streaming-item" href="#">Streaming</a>
-										      </li>
-										      <li>
-										      	<a id="polling-item" href="#">Polling</a>
-										      </li>
-										      <li>
-										      	<a id="long-polling-item" href="#">Long Polling</a>
-										      </li>
-										    </ul>
-									  	</li>
-								  	</td>
-		                        </tr>
-		                    </tbody>
-		                </table>
 		                <table id="chartableStats" class="table-condensed">
 		                    <thead>
 		                        <tr>
@@ -129,7 +108,6 @@
         	var socket = $.atmosphere;
 
             function handleAtmosphere( transport ) {
-            	$('#transportType').html(transport);
                 var asyncHttpStatistics = {
                         transportType: 'N/A',
                         responseState: 'N/A',
@@ -139,10 +117,7 @@
                     };
                 
                 function refresh() {
-
                     console.log("Refreshing data tables...");
-
-                    $('#transportType').html(asyncHttpStatistics.transportType);
                     $('#responseState').html(asyncHttpStatistics.responseState);
                     $('#numberOfCallbackInvocations').html(asyncHttpStatistics.numberOfCallbackInvocations);
                     $('#numberOfTweets').html(asyncHttpStatistics.numberOfTweets);
@@ -152,7 +127,7 @@
                 request.transport = transport;
                 request.url = "<c:url value='/twitter/concurrency'/>";
                 request.contentType = "application/json";
-                request.fallbackTransport = 'websocket';
+                request.fallbackTransport = null;
                 //request.callback = buildTemplate;
                 
                 request.onMessage = function(response){
@@ -206,21 +181,36 @@
             
             $(function() {
                 $("#streaming-item").click(function() {
+                	removeActive();
                 	socket.unsubscribe();
                 	handleAtmosphere("streaming");
+                	$('#streaming-item').toggleClass("active");
                 });
                 $("#websockets-item").click(function() {
+                	removeActive();
                 	socket.unsubscribe();
                 	handleAtmosphere("websocket");
+                	$('#websockets-item').toggleClass("active");
                 });
                 $("#polling-item").click(function() {
+                	removeActive();
                 	socket.unsubscribe();
                 	handleAtmosphere('polling');
+                	$('#polling-item').toggleClass("active");
                 });
                 $("#long-polling-item").click(function() {
+                	removeActive();
                 	socket.unsubscribe();
                 	handleAtmosphere('long-polling');
+                	$('#long-polling-item').toggleClass("active");
                 });
+                
+                function removeActive(){
+                	$('#websockets-item').toggleClass("active", false);
+                	$('#streaming-item').toggleClass("active", false);
+                	$('#polling-item').toggleClass("active", false);
+                	$('#long-polling-item').toggleClass("active", false);
+                }
             });
 
         </script>
