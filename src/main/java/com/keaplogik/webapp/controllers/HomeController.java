@@ -76,7 +76,7 @@ public class HomeController {
 
         final Broadcaster bc = atmosphereResource.getBroadcaster();
         
-        System.out.println("Atmo Resource Size: " + bc.getAtmosphereResources().size());
+        logger.info("Atmo Resource Size: " + bc.getAtmosphereResources().size());
 
         bc.scheduleFixedBroadcast(new Callable<String>() {
 
@@ -88,7 +88,7 @@ public class HomeController {
                 final TwitterTemplate twitterTemplate = new TwitterTemplate();
                 final SearchResults results = twitterTemplate.searchOperations().search("world", 1, 5, sinceId, 0);
 
-               logger.info("sinceId: " + sinceId + "; maxId: " + results.getMaxId());
+               //logger.info("sinceId: " + sinceId + "; maxId: " + results.getMaxId());
 
                 sinceId = results.getMaxId();
                 
