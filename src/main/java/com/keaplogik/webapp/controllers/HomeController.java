@@ -79,7 +79,6 @@ public class HomeController {
         logger.info("Atmo Resource Size: " + bc.getAtmosphereResources().size());
 
         bc.scheduleFixedBroadcast(new Callable<String>() {
-
             
 
             //@Override

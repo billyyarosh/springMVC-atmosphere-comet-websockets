@@ -46,6 +46,25 @@
 		                            <td>Protocol</td>
 		                            <td id="transportType">N/A</td>
 		                        </tr>
+		                        <tr>
+		                        	<td>
+		                        		<li class="dropdown">
+										    <a class="dropdown-toggle"
+										       data-toggle="dropdown" href="#">
+										        Choose Protocol
+										        <b class="caret"></b>
+										      </a>
+										    <ul class="dropdown-menu">
+										      <li>
+										      	<a href="javascript:changeTransport()">Streaming</a>
+										      </li>
+										      <li>
+										      	<a href="javascript:changeTransport()">Websockets</a>
+										      </li>
+										    </ul>
+									  	</li>
+								  	</td>
+		                        </tr>
 		                    </tbody>
 		                </table>
 		                <table id="chartableStats" class="table-condensed">
@@ -101,9 +120,13 @@
         </script>
 
         <script type="text/javascript">
+        
+        	var globalTransport = "";
+        	var socket = $.atmosphere;
+        	var subSocket;
 
-            $(function() {
-
+            function handleAtmosphere( ) {
+            	
                 var asyncHttpStatistics = {
                         transportType: 'N/A',
                         responseState: 'N/A',
@@ -123,58 +146,74 @@
                     $('#numberOfErrors').html(asyncHttpStatistics.numberOfErrors);
 
                 }
-
-                var socket = $.atmosphere;
                 var request = new $.atmosphere.AtmosphereRequest();
-                request.transport = 'websocket';
+                request.transport = globalTransport;
                 request.url = "<c:url value='/twitter/concurrency'/>";
                 request.contentType = "application/json";
-                request.fallbackTransport = 'polling';
-                request.callback = onMessage;
+                request.fallbackTransport = 'websocket';
+                //request.callback = buildTemplate;
                 
-                function onMessage(response)
-                {
-                    asyncHttpStatistics.numberOfCallbackInvocations++;
+                request.onMessage = function(response){
+                    buildTemplate(response);
+                };
+
+                subSocket = socket.subscribe(request);
+                
+                function buildTemplate(response){
+                	asyncHttpStatistics.numberOfCallbackInvocations++;
                     asyncHttpStatistics.transportType = response.transport;
                     asyncHttpStatistics.responseState = response.responseState;
 
                     $.atmosphere.log('info', ["response.state: " + response.state]);
                     $.atmosphere.log('info', ["response.transport: " + response.transport]);
                     $.atmosphere.log('info', ["response.responseBody: " + response.responseBody]);
-                    if (response.status == 200) {
-                        var data = response.responseBody;
-
-                        if (data) {
-
-                            try {
-                                var result =  $.parseJSON(data);
-
-                                var visible = $('#placeHolder').is(':visible');
-
-                                if (result.length > 0 && visible) {
-                                    $("#placeHolder").fadeOut();
-                                }
-
-                                asyncHttpStatistics.numberOfTweets = asyncHttpStatistics.numberOfTweets + result.length;
-
-                                $( "#template" ).tmpl( result ).hide().prependTo( "#twitterMessages").fadeIn();
-
-                            } catch (error) {
-                                asyncHttpStatistics.numberOfErrors++;
-                                console.log("An error ocurred: " + error);
-                            }
-                        } else {
-                            console.log("response.responseBody is null - ignoring.");
-                        }
-                    }
-
-                    refresh();
-                };
-
-                var subSocket = socket.subscribe(request);
-
-            });
-
+                    
+                    if(response.state = "messageReceived"){
+                    
+	                	var data = response.responseBody;
+	
+	                    if (data) {
+	
+	                        try {
+	                            var result =  $.parseJSON(data);
+	
+	                            var visible = $('#placeHolder').is(':visible');
+	
+	                            if (result.length > 0 && visible) {
+	                                $("#placeHolder").fadeOut();
+	                            }
+	
+	                            asyncHttpStatistics.numberOfTweets = asyncHttpStatistics.numberOfTweets + result.length;
+	
+	                            $( "#template" ).tmpl( result ).hide().prependTo( "#twitterMessages").fadeIn();
+	
+	                        } catch (error) {
+	                            asyncHttpStatistics.numberOfErrors++;
+	                            console.log("An error ocurred: " + error);
+	                        }
+	                    } else {
+	                        console.log("response.responseBody is null - ignoring.");
+	                    }
+	
+	                	refresh();
+                	}
+                }
+            }
+            
+            function changeTransport(){
+            	if(globalTransport == "streaming"){
+            		globalTransport = "websocket";
+            	}else{
+            		globalTransport = "streaming";
+            	}
+            	
+            	socket.unsubscribe();
+            	
+            	handleAtmosphere();
+            }
+            
+            globalTransport = "streaming";
+            handleAtmosphere(globalTransport);
 
         </script>
     </body>
