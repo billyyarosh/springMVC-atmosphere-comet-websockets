@@ -24,6 +24,13 @@ The websocket client will lose connection, whenever the connectionTimeout value 
 
 **Other Notes**
 * **AJP protocol does not support websockets.**
-* The Http11NioProtocol does not kill off atmosphere resources when unsubscribe is fired and using a Comet transport
-    (long-polling, streaming). This can cause duplicate results when refreshing the page.
+* The Http11NioProtocol does not work with atmosphere unless you have a context.xml in META-INF/context.xml 
+     in the following form. For Tomcat applications
+
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Context>
+        <Loader delegate="true"/>
+    </Context>
+    ```
 
