@@ -2,8 +2,8 @@
 
 **Frameworks**
 * SpringMVC
-* Atmosphere Framework https://github.com/Atmosphere/atmosphere - automatic!
-* Twitter/Spring social https://github.com/SpringSource/spring-social - automatic!
+* Atmosphere Framework https://github.com/Atmosphere/atmosphere
+* Twitter/Spring social https://github.com/SpringSource/spring-social
 
 **Purpose**
 *To demo an implementation of Websockets and Comet, when working with an existing SpringMVC web application.*
