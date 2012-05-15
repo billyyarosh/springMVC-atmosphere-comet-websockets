@@ -56,10 +56,16 @@
 										      </a>
 										    <ul class="dropdown-menu">
 										      <li>
-										      	<a href="javascript:changeTransport()">Streaming</a>
+										      	<a id="websockets-item" href="#">Websockets</a>
 										      </li>
 										      <li>
-										      	<a href="javascript:changeTransport()">Websockets</a>
+										      	<a id="streaming-item" href="#">Streaming</a>
+										      </li>
+										      <li>
+										      	<a id="polling-item" href="#">Polling</a>
+										      </li>
+										      <li>
+										      	<a id="long-polling-item" href="#">Long Polling</a>
 										      </li>
 										    </ul>
 									  	</li>
@@ -120,13 +126,10 @@
         </script>
 
         <script type="text/javascript">
-        
-        	var globalTransport = "";
         	var socket = $.atmosphere;
-        	var subSocket;
 
-            function handleAtmosphere( ) {
-            	
+            function handleAtmosphere( transport ) {
+            	$('#transportType').html(transport);
                 var asyncHttpStatistics = {
                         transportType: 'N/A',
                         responseState: 'N/A',
@@ -134,7 +137,7 @@
                         numberOfTweets: 0,
                         numberOfErrors: 0
                     };
-
+                
                 function refresh() {
 
                     console.log("Refreshing data tables...");
@@ -144,10 +147,9 @@
                     $('#numberOfCallbackInvocations').html(asyncHttpStatistics.numberOfCallbackInvocations);
                     $('#numberOfTweets').html(asyncHttpStatistics.numberOfTweets);
                     $('#numberOfErrors').html(asyncHttpStatistics.numberOfErrors);
-
                 }
                 var request = new $.atmosphere.AtmosphereRequest();
-                request.transport = globalTransport;
+                request.transport = transport;
                 request.url = "<c:url value='/twitter/concurrency'/>";
                 request.contentType = "application/json";
                 request.fallbackTransport = 'websocket';
@@ -157,7 +159,7 @@
                     buildTemplate(response);
                 };
 
-                subSocket = socket.subscribe(request);
+                var subSocket = socket.subscribe(request);
                 
                 function buildTemplate(response){
                 	asyncHttpStatistics.numberOfCallbackInvocations++;
@@ -199,21 +201,27 @@
                 	}
                 }
             }
+
+            handleAtmosphere("streaming");
             
-            function changeTransport(){
-            	if(globalTransport == "streaming"){
-            		globalTransport = "websocket";
-            	}else{
-            		globalTransport = "streaming";
-            	}
-            	
-            	socket.unsubscribe();
-            	
-            	handleAtmosphere();
-            }
-            
-            globalTransport = "streaming";
-            handleAtmosphere(globalTransport);
+            $(function() {
+                $("#streaming-item").click(function() {
+                	socket.unsubscribe();
+                	handleAtmosphere("streaming");
+                });
+                $("#websockets-item").click(function() {
+                	socket.unsubscribe();
+                	handleAtmosphere("websocket");
+                });
+                $("#polling-item").click(function() {
+                	socket.unsubscribe();
+                	handleAtmosphere('polling');
+                });
+                $("#long-polling-item").click(function() {
+                	socket.unsubscribe();
+                	handleAtmosphere('long-polling');
+                });
+            });
 
         </script>
     </body>
