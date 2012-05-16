@@ -5,5 +5,5 @@ log.roo
 .settings
 .springBeans
 .DS_Store
-.iml
+*.iml
 .idea
