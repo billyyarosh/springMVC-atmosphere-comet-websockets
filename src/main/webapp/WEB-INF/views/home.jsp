@@ -134,6 +134,14 @@
                     buildTemplate(response);
                 };
 
+                request.onMessagePublished = function(response){
+
+                };
+
+                request.onOpen = function() { $.atmosphere.log('info', ['socket open']); };
+                request.onError =  function() { $.atmosphere.log('info', ['socket error']); };
+                request.onReconnect =  function() { $.atmosphere.log('info', ['socket reconnect']); };
+
                 var subSocket = socket.subscribe(request);
                 
                 function buildTemplate(response){

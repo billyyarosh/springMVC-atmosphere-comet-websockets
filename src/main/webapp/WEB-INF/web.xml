@@ -26,22 +26,6 @@
             <param-value>org.atmosphere.cpr.DefaultBroadcaster</param-value>
         </init-param>
         <init-param>
-            <param-name>org.atmosphere.resumeOnBroadcast</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.useNative</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.useWebSocket</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>org.atmosphere.useStream</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
         </init-param>
