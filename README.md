@@ -12,13 +12,15 @@ This project was intended for testing on Tomcat7.0.27 which is the only current 
 
 Configure your HTTP connector in Tomcat's conf/server.xml as such:
 
+**Not Required for versions of Tomcat greater than 7.0.27**
+
 ```xml
 <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
                connectionTimeout="600000"
                redirectPort="8443" />
 ```
 
-**there is a current bug in the websocket implementation on tomcat. 
+**there is a current bug in the websocket implementation on tomcat7.0.27. 
 The websocket client will lose connection, whenever the connectionTimeout value has been reached for websocket connections.
 *So configure your timeout to a really high value.*
 
