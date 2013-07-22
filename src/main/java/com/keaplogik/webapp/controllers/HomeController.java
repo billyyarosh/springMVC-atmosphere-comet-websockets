@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.twitter.api.SearchResults;
 import org.springframework.social.twitter.api.Tweet;
+import org.springframework.social.twitter.api.impl.SearchParameters;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,12 +85,17 @@ public class HomeController {
             //@Override
             public String call() throws Exception {
 
-                final TwitterTemplate twitterTemplate = new TwitterTemplate();
-                final SearchResults results = twitterTemplate.searchOperations().search("world", 1, 5, sinceId, 0);
+            	//Auth using keaplogik application springMVC-atmosphere-comet-webso key
+            	final TwitterTemplate twitterTemplate = 
+            			new TwitterTemplate("WnLeyhTMjysXbNUd7DLcg",
+            					"BhtMjwcDi8noxMc6zWSTtzPqq8AFV170fn9ivNGrc", 
+            					"537308114-5ByNH4nsTqejcg5b2HNeyuBb3khaQLeNnKDgl8",
+            					"7aRrt3MUrnARVvypaSn3ZOKbRhJ5SiFoneahEp2SE");
+                
+                final SearchParameters parameters = new SearchParameters("world").count(5).sinceId(sinceId).maxId(0);
+                final SearchResults results = twitterTemplate.searchOperations().search(parameters);
 
-               //logger.info("sinceId: " + sinceId + "; maxId: " + results.getMaxId());
-
-                sinceId = results.getMaxId();
+                sinceId = results.getSearchMetadata().getMax_id();
                 
                 List<TwitterMessage> twitterMessages = new ArrayList<TwitterMessage>();
                 
