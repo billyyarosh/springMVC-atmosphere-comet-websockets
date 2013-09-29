@@ -1,5 +1,8 @@
 #### About this demo applications:
 
+**Tutorial**  
+A tutorial isavailable for this demo at [keaplogik.blogspot.com](http://keaplogik.blogspot.com/2012/05/atmosphere-websockets-comet-with-spring.html).
+
 **Frameworks**
 * SpringMVC
 * Atmosphere Framework https://github.com/Atmosphere/atmosphere
