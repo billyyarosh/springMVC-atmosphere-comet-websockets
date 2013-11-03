@@ -1,36 +1,34 @@
 #### About this demo applications:
 
 **Tutorial**  
-A tutorial isavailable for this demo at [keaplogik.blogspot.com](http://keaplogik.blogspot.com/2012/05/atmosphere-websockets-comet-with-spring.html).
+A tutorial is available for this demo at [keaplogik.blogspot.com](http://keaplogik.blogspot.com/2012/05/atmosphere-websockets-comet-with-spring.html).
 
 **Frameworks**
-* SpringMVC
+* Spring MVC
 * Atmosphere Framework https://github.com/Atmosphere/atmosphere
 * Twitter/Spring social https://github.com/SpringSource/spring-social
 
 **Purpose**
 *To demo an implementation of Websockets and Comet, when working with an existing SpringMVC web application.*
 
-This project was intended for testing on Tomcat7.0.27 which is the only current version of tomcat supporting websockets.
+This project was intended for testing on Tomcat 7.0.27 which was the only version of 
+tomcat supporting websockets at the time this demo was created.
 
 Configure your HTTP connector in Tomcat's conf/server.xml as such:
 
 **Not Required for versions of Tomcat greater than 7.0.27**
 
 ```xml
+<!-- Resolved an issue with http timeouts when using the tomcat comet adapter. Only an issue in Tomcat 7.0.27 --> 
 <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
                connectionTimeout="600000"
                redirectPort="8443" />
 ```
 
-**there is a current bug in the websocket implementation on tomcat7.0.27. 
-The websocket client will lose connection, whenever the connectionTimeout value has been reached for websocket connections.
-*So configure your timeout to a really high value.*
-
 **Other Notes**
-* **AJP protocol does not support websockets.**
+* **AJP protocol does not `currently` support websockets.**
 * The Http11NioProtocol does not work with atmosphere unless you have a context.xml in META-INF/context.xml 
-     in the following form. For Tomcat applications
+     in the following form. For Tomcat applications:
 
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
