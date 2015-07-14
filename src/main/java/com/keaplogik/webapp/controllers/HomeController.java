@@ -43,20 +43,20 @@ public class HomeController {
 	
 	private void suspend(final AtmosphereResource resource) {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        resource.addEventListener(new AtmosphereResourceEventListenerAdapter() {
-            @Override
-            public void onSuspend(AtmosphereResourceEvent event) {
-                countDownLatch.countDown();
-                resource.removeEventListener(this);
-            }
-        });
-        resource.suspend();
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+	        resource.addEventListener(new AtmosphereResourceEventListenerAdapter() {
+	            @Override
+	            public void onSuspend(AtmosphereResourceEvent event) {
+	                countDownLatch.countDown();
+	                resource.removeEventListener(this);
+	            }
+	        });
+	        resource.suspend();
+	        try {
+	            countDownLatch.await();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+    	}
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -75,42 +75,41 @@ public class HomeController {
 	
 		this.suspend(atmosphereResource);
 
-        final Broadcaster bc = atmosphereResource.getBroadcaster();
-        
-        logger.info("Atmo Resource Size: " + bc.getAtmosphereResources().size());
-
-        bc.scheduleFixedBroadcast(new Callable<String>() {
-            
-
-            //@Override
-            public String call() throws Exception {
-
-            	//Auth using keaplogik application springMVC-atmosphere-comet-webso key
-            	final TwitterTemplate twitterTemplate = 
-            			new TwitterTemplate("WnLeyhTMjysXbNUd7DLcg",
-            					"BhtMjwcDi8noxMc6zWSTtzPqq8AFV170fn9ivNGrc", 
-            					"537308114-5ByNH4nsTqejcg5b2HNeyuBb3khaQLeNnKDgl8",
-            					"7aRrt3MUrnARVvypaSn3ZOKbRhJ5SiFoneahEp2SE");
-                
-                final SearchParameters parameters = new SearchParameters("world").count(5).sinceId(sinceId).maxId(0);
-                final SearchResults results = twitterTemplate.searchOperations().search(parameters);
-
-                sinceId = results.getSearchMetadata().getMax_id();
-                
-                List<TwitterMessage> twitterMessages = new ArrayList<TwitterMessage>();
-                
-                for (Tweet tweet : results.getTweets()) {
-                    twitterMessages.add(new TwitterMessage(tweet.getId(),
-                                                           tweet.getCreatedAt(),
-                                                           tweet.getText(),
-                                                           tweet.getFromUser(),
-                                                           tweet.getProfileImageUrl()));
-                }
-
-                return mapper.writeValueAsString(twitterMessages);
-            }
-
-        }, 10, TimeUnit.SECONDS);
+	        final Broadcaster bc = atmosphereResource.getBroadcaster();
+	        
+	        logger.info("Atmo Resource Size: " + bc.getAtmosphereResources().size());
+	
+	        bc.scheduleFixedBroadcast(new Callable<String>() {
+	            
+	            //@Override
+	            public String call() throws Exception {
+	
+	            	//Auth using keaplogik application springMVC-atmosphere-comet-webso key
+	            	final TwitterTemplate twitterTemplate = 
+	            			new TwitterTemplate("WnLeyhTMjysXbNUd7DLcg",
+	            					"BhtMjwcDi8noxMc6zWSTtzPqq8AFV170fn9ivNGrc", 
+	            					"537308114-5ByNH4nsTqejcg5b2HNeyuBb3khaQLeNnKDgl8",
+	            					"7aRrt3MUrnARVvypaSn3ZOKbRhJ5SiFoneahEp2SE");
+	                
+	                final SearchParameters parameters = new SearchParameters("world").count(5).sinceId(sinceId).maxId(0);
+	                final SearchResults results = twitterTemplate.searchOperations().search(parameters);
+	
+	                sinceId = results.getSearchMetadata().getMax_id();
+	                
+	                List<TwitterMessage> twitterMessages = new ArrayList<TwitterMessage>();
+	                
+	                for (Tweet tweet : results.getTweets()) {
+	                    twitterMessages.add(new TwitterMessage(tweet.getId(),
+	                                                           tweet.getCreatedAt(),
+	                                                           tweet.getText(),
+	                                                           tweet.getFromUser(),
+	                                                           tweet.getProfileImageUrl()));
+	                }
+	
+	                return mapper.writeValueAsString(twitterMessages);
+	            }
+	
+	        }, 10, TimeUnit.SECONDS);
 	}
 	
 }
